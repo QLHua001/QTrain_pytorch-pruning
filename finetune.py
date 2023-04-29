@@ -96,7 +96,8 @@ class FilterPrunner:
     def normalize_ranks_per_layer(self):
         for i in self.filter_ranks:
             v = torch.abs(self.filter_ranks[i])
-            v = v / np.sqrt(torch.sum(v * v))
+            temp = torch.sum(v * v).cpu().detach().numpy()
+            v = v / np.sqrt(temp)
             self.filter_ranks[i] = v.cpu()
 
     def get_prunning_plan(self, num_filters_to_prune):
@@ -246,8 +247,8 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--train", dest="train", action="store_true")
     parser.add_argument("--prune", dest="prune", action="store_true")
-    parser.add_argument("--train_path", type = str, default = "train")
-    parser.add_argument("--test_path", type = str, default = "test")
+    parser.add_argument("--train_path", type = str, default = "/QMy-File2/QDatasets2/Kaggle/dogs-vs-cats/train")
+    parser.add_argument("--test_path", type = str, default = "/QMy-File2/QDatasets2/Kaggle/dogs-vs-cats/test1")
     parser.add_argument('--use-cuda', action='store_true', default=False, help='Use NVIDIA GPU acceleration')    
     parser.set_defaults(train=False)
     parser.set_defaults(prune=False)
